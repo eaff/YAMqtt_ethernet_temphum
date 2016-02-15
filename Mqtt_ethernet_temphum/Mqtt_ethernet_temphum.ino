@@ -38,11 +38,11 @@ MIT license, all text above must be included in any redistribution
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
 //Uncomment the following, and set to a valid ip if you don't have dhcp available.
-//IPAddress iotIP (192, 168, 0, 42);
+IPAddress iotIP (192, 168, 1, 105);
 //Uncomment the following, and set to your preference if you don't have automatic dns.
-//IPAddress dnsIP (8, 8, 8, 8);
+IPAddress dnsIP(8, 8, 8, 8);
 //If you uncommented either of the above lines, make sure to change "Ethernet.begin(mac)" to "Ethernet.begin(mac, iotIP)" or "Ethernet.begin(mac, iotIP, dnsIP)"
-
+IPAddress gwIP(192, 168, 1, 254);
 
 /************************* Adafruit.io Setup *********************************/
 
@@ -150,12 +150,13 @@ void setup() {
 
 	// Initialise the Client
 	Serial.print(F("\nInit the Client..."));
-	if (Ethernet.begin(mac) == 0) {
+	Ethernet.begin(mac, iotIP, dnsIP, gwIP);
+	/*if (Ethernet.begin(mac) == 0) {
 		Serial.println("Failed to configure Ethernet using DHCP");
 		// no point in carrying on, so do nothing forevermore:
 		for (;;)
 			;
-	}
+	}*/
 	delay(1000); //give the ethernet a second to initialize
 	printIPAddress();
 
@@ -226,7 +227,7 @@ void loop() {
 			//Serial.println(F("OK!"));
 		}
 	}
-	// Maintain DHCP Address
+/*	// Maintain DHCP Address
 	if ((Ethernet.maintain()))
 	{
 		Serial.println("Failed to renew IP using DHCP");
@@ -234,7 +235,7 @@ void loop() {
 		for (;;)
 			;
 	}
-
+	*/
 	// ping the server to keep the mqtt connection alive
 	if (!mqtt.ping()) {
 		Serial.print("Ping to MQTT Failed Disconnecting... ");
